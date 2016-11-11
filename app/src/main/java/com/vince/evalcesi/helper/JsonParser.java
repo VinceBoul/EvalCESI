@@ -62,10 +62,11 @@ public class JsonParser {
         Note note;
         for(int i=0; i < array.length(); i++){
             obj = array.getJSONObject(i);
-            if (obj.optString("message").length() > 0){
-                note = new Note(obj.optString("username"), obj.optString("message"), obj.optLong("date"));
+            if (obj.optString("note").length() > 0) {
+                note = new Note(obj.getString("id"), obj.optString("username"), obj.optString("note"), obj.optBoolean("done"), obj.optLong("date"));
                 notes.add(note);
             }
+
         }
 
         return notes;

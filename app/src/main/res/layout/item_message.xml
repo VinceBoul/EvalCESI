@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -30,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                tools:text="user " />
 
             <TextView
                 android:id="@+id/msg_date"
@@ -39,7 +41,23 @@
                 android:textStyle="italic"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_weight="1"
+                tools:text="date " />
+
+            <CheckBox
+                android:text="Terminée"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/check_done"
                 android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/note_id"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+
         </LinearLayout>
 
         <TextView

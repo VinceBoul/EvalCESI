@@ -51,7 +51,7 @@ public class PlusOneFragment extends Fragment {
         View header = getActivity().getLayoutInflater().inflate(R.layout.user_list_header, list, false);
 
         list.addHeaderView(header, null, false);
-        List<String> users = Arrays.asList("sup1", "sup2", "sup3");
+        List<String> users = Arrays.asList();
 
         adapter = new UserListAdapter(getContext(), users);
         list.setAdapter(adapter);

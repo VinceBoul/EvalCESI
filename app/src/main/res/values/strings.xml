@@ -9,7 +9,7 @@
     <string name="url_signup">http://cesi.cleverapps.io/signup</string>
     <string name="error_login">Login failed. Please check your login and password</string>
     <string name="error_signup">Signup failed</string>
-    <string name="tchat_message">Your message</string>
+    <string name="note_text">Votre tâche à faire</string>
     <string name="error_missing_msg">Missing message</string>
     <string name="url_msg">http://cesi.cleverapps.io/messages</string>
     <string name="url_notes">http://cesi.cleverapps.io/notes</string>

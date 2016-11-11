@@ -6,27 +6,38 @@ package com.vince.evalcesi.model;
 
 public class Note {
 
-    public Note(String username, String message, long date) {
+    String id;
+    String username;
+    String note;
+    Boolean done;
+    long date;
+
+    public Note(String id, String username, String note, Boolean done, long date) {
+        this.id = id;
         this.username = username;
-        this.msg = message;
+        this.note = note;
         this.date = date;
+        this.done = done;
+    }
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getNote() {
+        return note;
     }
-
-    String username;
-    String msg;
 
     public long getDate() {
         return date;
     }
-
-    long date;
 
 }

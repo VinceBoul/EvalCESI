@@ -6,39 +6,44 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Toast;
 
 import com.vince.evalcesi.R;
-import com.vince.evalcesi.WriteMsgDialog;
-import com.vince.evalcesi.adapter.MessagesAdapter;
+import com.vince.evalcesi.WriteNoteDialog;
+import com.vince.evalcesi.adapter.NotesAdapter;
 import com.vince.evalcesi.helper.JsonParser;
 import com.vince.evalcesi.helper.NetworkHelper;
 import com.vince.evalcesi.model.HttpResult;
-import com.vince.evalcesi.model.Message;
 import com.vince.evalcesi.model.Note;
+import com.vince.evalcesi.util.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 
 public class OneFragment extends Fragment {
 
     RecyclerView listView;
     FloatingActionButton fab;
-    MessagesAdapter adapter;
-    private GetMessagesAsyncTask messagesAsyncTask;
-    String token;
-
+    NotesAdapter adapter;
     private LinearLayoutManager mLayoutManager;
+    private GetMessagesAsyncTask messagesAsyncTask;
+    private SendNoteDoneAsyncTask sendNoteDoneAsyncTask;
+
+    private SwipeRefreshLayout swipeLayout;
+    String token;
 
     Timer timer;
     Boolean timerIsOn = true;
@@ -85,23 +90,65 @@ public class OneFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(this.getContext());
         listView.setLayoutManager(mLayoutManager);
 
-
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WriteMsgDialog d = WriteMsgDialog.getInstance(token);
+                WriteNoteDialog d = WriteNoteDialog.getInstance(token);
                 d.show(getActivity().getFragmentManager(), "write");
             }
         });
 
-        adapter = new MessagesAdapter(this.getContext());
+        sendNoteDoneAsyncTask = new SendNoteDoneAsyncTask(getContext());
+
+        adapter = new NotesAdapter(this.getContext(), sendNoteDoneAsyncTask);
         listView.setAdapter(adapter);
 
         messagesAsyncTask = new GetMessagesAsyncTask(getContext());
         messagesAsyncTask.execute();
+
         return view;
     }
+
+    private void loading() {
+        swipeLayout.setRefreshing(true);
+        new GetMessagesAsyncTask(getContext()).execute();
+    }
+
+    /**
+     * Setup refresh layout
+
+    private void setupRefreshLayout() {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loading();
+            }
+        });
+        swipeLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimaryDark, R.color.colorPrimary);
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                boolean enable = false;
+                if (list != null && list.getChildCount() > 0) {
+                    // check if the first item of the list is visible
+                    boolean firstItemVisible = list.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = list.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                swipeLayout.setEnabled(enable);
+            }
+        });
+    }
+*/
     /**
      * AsyncTask for sign-in
      */
@@ -129,15 +176,9 @@ public class OneFragment extends Fragment {
                     // Convert the InputStream into a string
                     List<Note> notes = JsonParser.getNotes(result.json);
                     return notes;
-                    //return JsonParser.getMessages(result.json);
-                    /*MessagesDAO dao = new MessagesDAO(context);
-
-                    dao.writeMessages(messages);*/
                 }
                 return null;
 
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
             } catch (Exception e) {
                 Log.e("NetworkHelper", e.getMessage());
                 return null;
@@ -159,8 +200,39 @@ public class OneFragment extends Fragment {
                 nb = notes.size();
             }
 
-            Toast.makeText(getContext(),"Il y a "+nb+" messages", Toast.LENGTH_SHORT);
-            adapter.addMessage(notes);
+            Toast.makeText(getContext(),"Il y a "+nb+" notes", Toast.LENGTH_SHORT);
+            adapter.addNotes(notes);
+        }
+    }
+
+    public class SendNoteDoneAsyncTask extends AsyncTask<String, Void, Integer> {
+
+        Context context;
+
+        public SendNoteDoneAsyncTask(final Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            try {
+                Map<String, String> p = new HashMap<>();
+                p.put("id", params[0]);
+                HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_notes), p, token);
+
+                return result.code;
+            } catch (Exception e) {
+                Log.d(Constants.TAG, "Error occured in your AsyncTask : ", e);
+                return 500;
+            }
+        }
+
+        @Override
+        public void onPostExecute(Integer status) {
+            if (status != 200) {
+                Toast.makeText(context, context.getString(R.string.error_send_msg), Toast.LENGTH_SHORT).show();
+            }else{
+            }
         }
     }
 

@@ -22,14 +22,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Vince on 07/11/2016.
+ * Created by Vince on 11/11/2016.
  */
-public class WriteMsgDialog extends DialogFragment {
+
+public class WriteNoteDialog extends DialogFragment {
 
     private EditText message;
 
-    public static WriteMsgDialog getInstance(final String token) {
-        WriteMsgDialog f = new WriteMsgDialog();
+    public static WriteNoteDialog getInstance(final String token) {
+        WriteNoteDialog f = new WriteNoteDialog();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -47,8 +48,8 @@ public class WriteMsgDialog extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        final View view = inflater.inflate(R.layout.dialog_msg, null);
-        message = (EditText) view.findViewById(R.id.tchat_msg);
+        final View view = inflater.inflate(R.layout.dialog_note, null);
+        message = (EditText) view.findViewById(R.id.note_text);
 
         builder.setView(view)
                 // Add action buttons
@@ -58,17 +59,17 @@ public class WriteMsgDialog extends DialogFragment {
                         closeKeyboard();
                         if (!message.getText().toString().isEmpty()) {
                             //post message
-                            new SendMessageAsyncTask(view.getContext())
+                            new WriteNoteDialog.SendMessageAsyncTask(view.getContext())
                                     .execute(message.getText().toString());
                         } else {
-                            message.setError(WriteMsgDialog.this.getActivity()
+                            message.setError(WriteNoteDialog.this.getActivity()
                                     .getString(R.string.error_missing_msg));
                         }
                     }
                 }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         closeKeyboard();
-                        WriteMsgDialog.this.dismiss();
+                        WriteNoteDialog.this.dismiss();
                     }
                 }
 
@@ -98,8 +99,8 @@ public class WriteMsgDialog extends DialogFragment {
         protected Integer doInBackground(String... params) {
             try {
                 Map<String, String> p = new HashMap<>();
-                p.put("message", params[0]);
-                HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_msg), p, getArguments().getString("token"));
+                p.put("note", params[0]);
+                HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_notes), p, getArguments().getString("token"));
 
                 return result.code;
             } catch (Exception e) {
@@ -113,7 +114,7 @@ public class WriteMsgDialog extends DialogFragment {
             if (status != 200) {
                 Toast.makeText(context, context.getString(R.string.error_send_msg), Toast.LENGTH_SHORT).show();
             }else {
-                WriteMsgDialog.this.dismiss();
+                WriteNoteDialog.this.dismiss();
             }
         }
     }
