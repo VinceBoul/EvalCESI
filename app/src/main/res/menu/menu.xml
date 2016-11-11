@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/tchat_disconnect"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/disconnect"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/preferences"
+        android:title="@string/menu_preferences"
+        android:showAsAction="always"
+        android:icon="@android:drawable/ic_dialog_info" />
+
+    <item android:id="@+id/tchat_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/refresh"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/tchat_stop_refresh"
+        android:icon="@android:drawable/ic_media_pause"
+        android:title="@string/stop_refresh"
+        android:showAsAction="always"/>
+
+</menu>
