@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "62595269134",
+    "firebase_url": "https://appcesi-750a4.firebaseio.com",
+    "project_id": "appcesi-750a4",
+    "storage_bucket": "appcesi-750a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62595269134:android:5bb94fc424d6e997",
+        "android_client_info": {
+          "package_name": "com.vince.appcesi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62595269134-83kimkmjave01n9oc70nql0blikt1i9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa5UtCYnZBYQGnLU353k4SDkJ4LRL31QE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
