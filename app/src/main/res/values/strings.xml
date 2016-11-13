@@ -27,6 +27,9 @@
     <string name="inscrire_button">S\'incrire</string>
     <string name="stop_refresh">Désactiver la réactualisation auto</string>
     <string name="title_activity_my_tab">Tabs Activity</string>
+    <string name="todo_tab">TODO List</string>
+    <string name="users_tab">Utilisateurs</string>
+    <string name="new_tab">Bientôt disponible</string>
     <string name="title_activity_settings">Settings</string>
     <string name="menu_preferences">Paramètres</string>
 </resources>

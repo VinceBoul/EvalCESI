@@ -29,9 +29,9 @@ public class MyTabActivity extends AppCompatActivity {
             }
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-            tabLayout.addTab(tabLayout.newTab().setText("TODO List"));
-            tabLayout.addTab(tabLayout.newTab().setText("Utilisateurs"));
-            tabLayout.addTab(tabLayout.newTab().setText("Bientôt disponible"));
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.todo_tab));
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.users_tab));
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.new_tab));
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
             final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
