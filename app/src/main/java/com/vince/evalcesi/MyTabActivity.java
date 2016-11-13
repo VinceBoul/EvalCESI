@@ -29,7 +29,7 @@ public class MyTabActivity extends AppCompatActivity {
             }
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-            tabLayout.addTab(tabLayout.newTab().setText("Tchat"));
+            tabLayout.addTab(tabLayout.newTab().setText("TODO List"));
             tabLayout.addTab(tabLayout.newTab().setText("Utilisateurs"));
             tabLayout.addTab(tabLayout.newTab().setText("Bientôt disponible"));
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
