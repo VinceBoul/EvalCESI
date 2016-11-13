@@ -39,7 +39,7 @@ public class OneFragment extends Fragment {
     FloatingActionButton fab;
     NotesAdapter adapter;
     private LinearLayoutManager mLayoutManager;
-    private GetMessagesAsyncTask messagesAsyncTask;
+    private GetNotesAsyncTask messagesAsyncTask;
     private SendNoteDoneAsyncTask sendNoteDoneAsyncTask;
 
     private SwipeRefreshLayout swipeLayout;
@@ -58,7 +58,7 @@ public class OneFragment extends Fragment {
     private void refresh() {
         if (timerIsOn){
             if (messagesAsyncTask == null || messagesAsyncTask.getStatus() != AsyncTask.Status.RUNNING){
-                messagesAsyncTask = new GetMessagesAsyncTask(getContext());
+                messagesAsyncTask = new GetNotesAsyncTask(getContext());
                 messagesAsyncTask.execute();
             }
         }else{
@@ -84,7 +84,9 @@ public class OneFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_one, container, false);
 
-        listView = (RecyclerView) view.findViewById(R.id.tchat_list);
+        listView = (RecyclerView) view.findViewById(R.id.notes_list);
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.notes_swiperefresh);
+
         listView.setHasFixedSize(true);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this.getContext());
@@ -101,10 +103,12 @@ public class OneFragment extends Fragment {
 
         sendNoteDoneAsyncTask = new SendNoteDoneAsyncTask(getContext());
 
-        adapter = new NotesAdapter(this.getContext(), sendNoteDoneAsyncTask);
+        adapter = new NotesAdapter(this.getContext());
         listView.setAdapter(adapter);
 
-        messagesAsyncTask = new GetMessagesAsyncTask(getContext());
+        setupRefreshLayout();
+
+        messagesAsyncTask = new GetNotesAsyncTask(getContext());
         messagesAsyncTask.execute();
 
         return view;
@@ -112,12 +116,12 @@ public class OneFragment extends Fragment {
 
     private void loading() {
         swipeLayout.setRefreshing(true);
-        new GetMessagesAsyncTask(getContext()).execute();
+        new GetNotesAsyncTask(getContext()).execute();
     }
 
     /**
      * Setup refresh layout
-
+     */
     private void setupRefreshLayout() {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -127,36 +131,16 @@ public class OneFragment extends Fragment {
         });
         swipeLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimaryDark, R.color.colorPrimary);
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                boolean enable = false;
-                if (list != null && list.getChildCount() > 0) {
-                    // check if the first item of the list is visible
-                    boolean firstItemVisible = list.getFirstVisiblePosition() == 0;
-                    // check if the top of the first item is visible
-                    boolean topOfFirstItemVisible = list.getChildAt(0).getTop() == 0;
-                    // enabling or disabling the refresh layout
-                    enable = firstItemVisible && topOfFirstItemVisible;
-                }
-                swipeLayout.setEnabled(enable);
-            }
-        });
     }
-*/
+
     /**
      * AsyncTask for sign-in
      */
-    protected class GetMessagesAsyncTask extends AsyncTask<Void, Void, List<Note>> {
+    protected class GetNotesAsyncTask extends AsyncTask<Void, Void, List<Note>> {
 
         Context context;
 
-        public GetMessagesAsyncTask(final Context context) {
+        public GetNotesAsyncTask(final Context context) {
             this.context = context;
         }
 
@@ -199,7 +183,7 @@ public class OneFragment extends Fragment {
             if(notes != null){
                 nb = notes.size();
             }
-
+            swipeLayout.setRefreshing(false);
             Toast.makeText(getContext(),"Il y a "+nb+" notes", Toast.LENGTH_SHORT);
             adapter.addNotes(notes);
         }
@@ -218,7 +202,11 @@ public class OneFragment extends Fragment {
             try {
                 Map<String, String> p = new HashMap<>();
                 p.put("id", params[0]);
-                HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_notes), p, token);
+                //p.put("done", n.isDone() ? "false" : "true");
+
+                HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_notes) + "/" + params[0], p, token);
+
+                //HttpResult result = NetworkHelper.doPost(context.getString(R.string.url_notes), p, token);
 
                 return result.code;
             } catch (Exception e) {

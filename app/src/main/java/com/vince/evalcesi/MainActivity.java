@@ -56,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.signin_register).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), SignupActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void loading(boolean loading) {
